@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-// Mock vector database of indexed objects/parts
 const MOCK_DATABASE = [
   { id: '1', title: 'Industrial Safety Helmet (Yellow)', category: 'Safety Gear', score: 0.94, image: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=400' },
   { id: '2', title: 'High-Visibility Safety Vest', category: 'Safety Gear', score: 0.89, image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400' },
@@ -14,12 +13,17 @@ export async function POST(req: Request) {
   try {
     const { query } = await req.json();
     
-    // Simple filter simulation based on search terms
-    const filtered = query 
-      ? MOCK_DATABASE.filter(item => item.title.toLowerCase().includes(query.toLowerCase()) || item.category.toLowerCase().includes(query.toLowerCase()))
-      : MOCK_DATABASE;
+    if (!query || query.trim() === '') {
+      return NextResponse.json({ results: MOCK_DATABASE });
+    }
 
-    return NextResponse.json({ results: filtered.length > 0 ? filtered : MOCK_DATABASE });
+    const filtered = MOCK_DATABASE.filter(item => 
+      item.title.toLowerCase().includes(query.toLowerCase()) || 
+      item.category.toLowerCase().includes(query.toLowerCase())
+    );
+
+    // Return strict results (empty array if nothing matches)
+    return NextResponse.json({ results: filtered });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to process search query' }, { status: 500 });
   }
