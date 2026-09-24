@@ -12,7 +12,7 @@ const MOCK_DATABASE = [
 export async function POST(req: Request) {
   try {
     const { query } = await req.json();
-    
+
     if (!query || query.trim() === '') {
       return NextResponse.json({ results: MOCK_DATABASE });
     }
@@ -22,7 +22,6 @@ export async function POST(req: Request) {
       item.category.toLowerCase().includes(query.toLowerCase())
     );
 
-    // Return strict results (empty array if nothing matches)
     return NextResponse.json({ results: filtered });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to process search query' }, { status: 500 });
