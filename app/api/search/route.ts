@@ -7,7 +7,6 @@ export async function POST(req: Request) {
     const { query } = await req.json();
     const term = query && query.trim() !== '' ? query.toLowerCase() : 'artificial intelligence';
 
-    // Dynamically generate semantic vector search results for ANY query typed by the user
     const results = [
       {
         id: '1',
